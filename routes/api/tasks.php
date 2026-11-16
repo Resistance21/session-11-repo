@@ -17,7 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function (Request $request) {
 
     $query = Task::query()
-        ->with(['user']);
+        ->with(['user'])
+        ->orderby('created_at', 'desc');
     if ($request->filled('status')) {
         $query->where(
             'status',

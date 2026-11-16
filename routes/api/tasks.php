@@ -5,18 +5,27 @@ declare(strict_types=1);
 use App\Http\Api\Controllers\Tasks\DeleteController;
 use App\Http\Api\Controllers\Tasks\ShowController;
 use App\Http\Api\Controllers\Tasks\StoreController;
-use App\Http\Api\Controllers\Tasks\UpdateController;
 use App\Http\Api\Controllers\Tasks\SyncAttachmentsController;
+use App\Http\Api\Controllers\Tasks\UpdateController;
 use App\Http\Api\Resources\TaskResource;
 use App\Http\Api\Responses\PaginatedCollectionResponse;
 use App\Models\Task;
 use App\Support\Pagination;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    $tasks = Pagination::simple(
-        Task::query()->with(['user']),
-    );
+Route::get('/', function (Request $request) {
+
+    $query = Task::query()
+        ->with(['user']);
+    if ($request->filled('status')) {
+        $query->where(
+            'status',
+            $request->string('status')->toString()
+        );
+    }
+
+    $tasks = Pagination::simple($query);
 
     return new PaginatedCollectionResponse(
         data: TaskResource::collection($tasks),

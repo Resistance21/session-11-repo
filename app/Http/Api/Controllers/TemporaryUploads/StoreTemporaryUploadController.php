@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use function Illuminate\Support\defer;
 
-final readonly class StoreController
+final readonly class StoreTemporaryUploadController
 {
     public function __construct(
         private Dispatcher $bus
